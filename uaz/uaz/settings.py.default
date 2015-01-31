@@ -1,0 +1,69 @@
+# -*- coding: utf-8 -*-
+
+# Scrapy settings for uaz project
+#
+# For simplicity, this file contains only the most important settings by
+# default. All the other settings are documented here:
+#
+#     http://doc.scrapy.org/en/latest/topics/settings.html
+#
+
+BOT_NAME = 'uaz'
+
+SPIDER_MODULES = ['uaz.spiders']
+NEWSPIDER_MODULE = 'uaz.spiders'
+
+DOWNLOAD_DELAY = 6
+RANDOMIZE_DOWNLOAD_DELAY = True
+
+CONCURRENT_REQUESTS = 1
+CONCURRENT_SPIDERS = 1
+
+DATABASE = {
+    'drivername': 'postgres',
+    'host': 'localhost',
+    'port': 5432,
+    'username': 'uazcrawl',
+    'password': 'removed',
+    'database': 'uazcrawl',
+}
+
+ITEM_PIPELINES = {
+    'uaz.pipelines.UazDBPipeline': 100,  # stores received data in postgresql database
+    'uaz.pipelines.UazExcelPipeline': 200,  # prints received data in excel file
+}
+
+DOWNLOAD_HANDLERS = {
+    'http': 'uaz.handlers.SeleniumDownloadHandler',
+    'https': 'uaz.handlers.SeleniumDownloadHandler',
+}
+
+XSESSION_VISIBLE = False  # False - run as daemon (works without running Xserver);
+                          # True - show virtual display in window (require running Xserver)
+XSESSION_DISPLAY_RESOLUTION = (800, 600)
+PROXY_PARAMS = 'relay:8123'  # our proxy server: polipo+tor
+
+XLS_FILENAME = "%Y%m%d%H%M%S"  # xls filename for excelpipeline (formats with datetime.strftime)
+XLS_SHEET_TITLE = u'УАЗ irr.ru'  # XLS spreadsheet title
+XLS_DATE_FORMAT = "D.M.YY"  # Date formatting in xls spreadsheet
+XLS_DATA_ORDER = (  # Columns in xls spreadsheet; format: (item's field name, title in header)
+                  (u'manufacturer', u'Производитель'),
+                  (u'model', u'Модель'),
+                  (u'modification', u'Модификация'),
+                  (u'release_year', u'Год выпуска'),
+                  (u'price', u'Стоимость, значение'),
+                  (u'currency', u'Стоимость, валюта'),
+                  (u'region', u'Регион'),
+                  (u'fuel', u'Тип топлива'),
+                  (u'mileage', u'Пробег, значение'),
+                  (u'mileage_units', u'Пробег, единицы'),
+                  (u'volume', u'Объем двигателя, значение'),
+                  (u'volume_units', u'Объем двигателя, единицы'),
+                  (u'horsepower', u'Мощность, л.с.'),
+                  (u'transmission', u'Трансмиссия'),
+                  (u'published', u'Дата публикации'),
+                  (u'title', u'Заголовок'),
+                  (u'url', u'URL-адрес'),
+                  (u'ad_type', u'Тип объявления'),
+                  (u'source', u'Источник данных'),
+)

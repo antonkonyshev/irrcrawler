@@ -1,0 +1,9 @@
+/env
+/logs
+*pyc
+*pyo
+*.swp
+.*
+*~
+uaz/uaz/settings.py
+uaz/scrapy.cfg
